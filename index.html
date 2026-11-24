@@ -416,7 +416,7 @@ button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;touch
   paintPlayer();
   document.onkeydown=e=>{if(!raceState||!raceState.running)return;if(['ArrowLeft','a','A'].includes(e.key)){e.preventDefault();setSteer(-1)}if(['ArrowRight','d','D'].includes(e.key)){e.preventDefault();setSteer(1)}if(e.code==='Space'||e.key==='ArrowUp'){e.preventDefault();jump()}};
   document.onkeyup=e=>{if(['ArrowLeft','a','A','ArrowRight','d','D'].includes(e.key))setSteer(0)};
-  let tick=0;
+  let tick=0,raceStartedAt=0;
   raceSpawn=setInterval(()=>{
    if(!raceState.running)return;
    const stageTypes=stageObstacleSets[currentStage-1],kind=(Math.random()<.38?'🪙':stageTypes[Math.floor(Math.random()*stageTypes.length)]);
@@ -440,11 +440,11 @@ button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;touch
     }
    });
    raceState.items=raceState.items.filter(it=>{if(it.y>100){it.el.remove();return false}return true});
-   if(tick%25===0){raceState.time--; $r('rTime').textContent=raceState.time}
+   if(raceStartedAt){const secondsElapsed=Math.floor((performance.now()-raceStartedAt)/1000),timeLeft=Math.max(0,60-secondsElapsed);if(timeLeft!==raceState.time){raceState.time=timeLeft;$r('rTime').textContent=timeLeft}}
    $r('rMoney').textContent=raceState.money.toLocaleString('th-TH');$r('rCoins').textContent=raceState.coins;$r('rScore').textContent=raceState.score.toLocaleString('th-TH');
    if(raceState.running&&raceState.time<=0)finishRace(true);
   },100);
-  const countdown=$r('raceCountdown'),beats=[['3',''],['2',''],['1',''],['READY','ready'],['GO!','go']];let beat=0;function countNext(){if(!raceState||!raceState.running&&beat>5)return;if(beat>=beats.length){countdown.remove();raceState.running=true;stagePopTimer=setInterval(showStageCharacter,15000);return}countdown.textContent=beats[beat][0];countdown.className='raceCountdown '+beats[beat][1];beat++;setTimeout(countNext,beats[beat-1][0]==='READY'?720:beats[beat-1][0]==='GO!'?640:760)}countNext();
+  const countdown=$r('raceCountdown'),beats=[['3',''],['2',''],['1',''],['READY','ready'],['GO!','go']];let beat=0;function countNext(){if(!raceState||!raceState.running&&beat>5)return;if(beat>=beats.length){countdown.remove();raceStartedAt=performance.now();raceState.running=true;stagePopTimer=setInterval(showStageCharacter,15000);return}countdown.textContent=beats[beat][0];countdown.className='raceCountdown '+beats[beat][1];beat++;setTimeout(countNext,beats[beat-1][0]==='READY'?720:beats[beat-1][0]==='GO!'?640:760)}countNext();
  }
  function finishRace(passed){
   if(!raceState||!raceState.running)return;
