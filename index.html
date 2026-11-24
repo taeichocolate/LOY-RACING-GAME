@@ -144,7 +144,7 @@ button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;touch
     <h2 class="rankTitle">🏆 TOP 10 RANKING</h2>
     <div class="rankSub">กระทงคะแนนสูงสุด • นักซิ่งแห่งสายน้ำ</div>
     <div class="rankList" id="rankList" aria-live="polite"></div>
-    <div class="rankFoot">อันดับจะบันทึกในอุปกรณ์นี้โดยอัตโนมัติ</div><button class="adminClearBtn" id="clearRanksHome" type="button">🛠️ ล้างอันดับ (ผู้ดูแล)</button>
+    <div class="rankFoot" id="rankFoot">อันดับจะบันทึกในอุปกรณ์นี้โดยอัตโนมัติ</div><button class="adminClearBtn" id="clearRanksHome" type="button">🛠️ ล้างอันดับ (ผู้ดูแล)</button>
    </section>
   </aside>
  </section>
@@ -164,6 +164,10 @@ button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;touch
  function stopHomeMusic(){const a=$('homeMusic');if(a){a.pause();try{a.currentTime=0}catch(e){}}if(homeFireworkTimer){clearInterval(homeFireworkTimer);homeFireworkTimer=null}}
  document.addEventListener('pointerdown',()=>{if(!$('modalWrap').classList.contains('show'))startHomeMusic()},{passive:true});
  const KEY='loyracing_home_top10_v1';
+ const SUPABASE_URL='https://ecodtrkfpylibsedwhll.supabase.co';
+ const SUPABASE_PUBLISHABLE_KEY='sb_publishable_1eP8Xy_WF0dcSReyUR6ehA_HasVgGKE';
+ const sharedRanksEnabled=Boolean(SUPABASE_URL&&SUPABASE_PUBLISHABLE_KEY);
+ const sharedRanksEndpoint=sharedRanksEnabled?SUPABASE_URL.replace(/\/$/,'')+'/rest/v1/loyracing_scores': '';
  const skinNames=['แดง','ส้ม','ทอง','เขียว','ฟ้า','น้ำเงิน','ม่วง','ชมพู'];
  const skinEmojis=['🪷','🏵️','🌼','🌺','💠','🪷','🌸','🌷'];
  let playerName=localStorage.getItem('loyracing_player_name')||'ผู้เล่น';
@@ -186,12 +190,16 @@ button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;touch
   catch(e){return demo.slice()}
  }
  function saveRanks(){try{const data=JSON.stringify(ranks.slice(0,10));localStorage.setItem(KEY,data);localStorage.setItem('loyracing_ranks',data)}catch(e){}}
- function clearRanks(){const pin=prompt('กรอกรหัสผู้ดูแลเพื่อจัดการอันดับ');if(pin===null)return;if(pin!=='11110000'){alert('รหัสผู้ดูแลไม่ถูกต้อง');return}if(!confirm('ผู้ดูแลต้องการล้างคะแนนอันดับทั้งหมดใช่ไหม?'))return;ranks=[];try{localStorage.setItem(KEY,'[]');localStorage.setItem('loyracing_ranks','[]')}catch(e){}renderRanks();const modalList=$('modal').querySelector('.rankList');if(modalList)modalList.innerHTML='<div class="emptyRank">ยังไม่มีคะแนน</div>';toast('ล้างอันดับคะแนนแล้ว')}
+ function clearRanks(){if(sharedRanksEnabled){alert('อันดับส่วนกลางจัดการได้จากหน้า Table Editor ใน Supabase');return}const pin=prompt('กรอกรหัสผู้ดูแลเพื่อจัดการอันดับ');if(pin===null)return;if(pin!=='11110000'){alert('รหัสผู้ดูแลไม่ถูกต้อง');return}if(!confirm('ผู้ดูแลต้องการล้างคะแนนอันดับทั้งหมดใช่ไหม?'))return;ranks=[];try{localStorage.setItem(KEY,'[]');localStorage.setItem('loyracing_ranks','[]')}catch(e){}renderRanks();toast('ล้างอันดับคะแนนแล้ว')}
  function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
  function renderRanks(){
-  ranks=readRanks().sort((a,b)=>Number(b.score)-Number(a.score)).slice(0,10);
-  $('rankList').innerHTML=ranks.length?ranks.map((r,i)=>`<div class="rankItem"><span class="rankNum">${i+1}</span><span class="rankIcon">${skinEmojis[Number(r.skin)||0]}</span><span class="rankName">${esc(r.name||'ผู้เล่น')}</span><span class="rankScore">${Number(r.score||0).toLocaleString('th-TH')}</span></div>`).join(''):'<div class="emptyRank">ยังไม่มีคะแนน</div>';
+  if(!sharedRanksEnabled)ranks=readRanks();ranks.sort((a,b)=>Number(b.score)-Number(a.score));ranks=ranks.slice(0,10);
+  const html=ranks.length?ranks.map((r,i)=>`<div class="rankItem"><span class="rankNum">${i+1}</span><span class="rankIcon">${skinEmojis[Number(r.skin)||0]}</span><span class="rankName">${esc(r.name||'ผู้เล่น')}</span><span class="rankScore">${Number(r.score||0).toLocaleString('th-TH')}</span></div>`).join(''):'<div class="emptyRank">ยังไม่มีคะแนน</div>';
+  $('rankList').innerHTML=html;const modalList=$('modal').querySelector('.rankList');if(modalList)modalList.innerHTML=html;
+  const foot=$('rankFoot');if(foot)foot.textContent=sharedRanksEnabled?'🏆 อันดับกลางออนไลน์ • ใช้ร่วมกันทุกเครื่อง':'อันดับจะบันทึกในอุปกรณ์นี้โดยอัตโนมัติ';
  }
+ async function loadSharedRanks(){if(!sharedRanksEnabled)return;try{const response=await fetch(sharedRanksEndpoint+'?select=player_name,score,skin,stage&order=score.desc,created_at.asc&limit=10',{headers:{apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:'Bearer '+SUPABASE_PUBLISHABLE_KEY}});if(!response.ok)throw new Error('HTTP '+response.status);const data=await response.json();ranks=data.map(r=>({name:r.player_name,score:Number(r.score)||0,skin:Number(r.skin)||0,stage:Number(r.stage)||1}));renderRanks()}catch(e){const foot=$('rankFoot');if(foot)foot.textContent='เชื่อมต่ออันดับกลางไม่ได้ • ตรวจการตั้งค่าฐานข้อมูล'}}
+ async function submitSharedScore(score){if(!sharedRanksEnabled){ranks.push({name:playerName,score,skin:selectedSkin});ranks.sort((a,b)=>b.score-a.score);ranks=ranks.slice(0,10);saveRanks();renderRanks();return}try{const response=await fetch(sharedRanksEndpoint,{method:'POST',headers:{apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:'Bearer '+SUPABASE_PUBLISHABLE_KEY,'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify({player_name:playerName,score,skin:selectedSkin,stage:currentStage})});if(!response.ok)throw new Error('HTTP '+response.status);await loadSharedRanks();toast('ส่งคะแนนเข้าอันดับกลางแล้ว')}catch(e){toast('ส่งคะแนนไม่สำเร็จ • ตรวจการเชื่อมต่ออินเทอร์เน็ต')}}
  function showModal(content){$('modal').innerHTML=content;$('modalWrap').classList.add('show')}
  function closeModal(){$('modalWrap').classList.remove('show')}
  function leaveGameFullscreen(){const w=$('modalWrap');w.classList.remove('raceFullscreen');if(document.fullscreenElement&&document.exitFullscreen)document.exitFullscreen().catch(()=>{})}
@@ -257,7 +265,7 @@ button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;touch
  }
  function rankScreen(){
   showModal(`<button class="close" id="closeModal">×</button><h2 id="modalTitle">🏆 อันดับคะแนน TOP 10</h2><div class="rankList">${ranks.length?ranks.map((r,i)=>`<div class="rankItem"><span class="rankNum">${i+1}</span><span class="rankIcon">${skinEmojis[Number(r.skin)||0]}</span><span class="rankName">${esc(r.name)}</span><span class="rankScore">${Number(r.score).toLocaleString('th-TH')}</span></div>`).join(''):'<div class="emptyRank">ยังไม่มีคะแนน</div>'}</div><div class="modalActions"><button class="adminClearBtn" id="clearRanksModal" type="button">🛠️ ล้างอันดับ (ผู้ดูแล)</button><button class="btn primary" id="okRank">ปิด</button></div>`);
-  $('closeModal').onclick=closeModal;$('okRank').onclick=closeModal;$('clearRanksModal').onclick=clearRanks;
+  $('closeModal').onclick=closeModal;$('okRank').onclick=closeModal;$('clearRanksModal').onclick=clearRanks;if(sharedRanksEnabled)loadSharedRanks();
  }
  function toast(msg){
   let old=$('toast');if(old)old.remove();
@@ -451,11 +459,7 @@ button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;touch
   raceState.running=false;stopRace();stopRaceMusic();document.onkeydown=null;document.onkeyup=null;carriedMoney=raceState.money;
   const finalScore=raceState.score+raceState.coins*50;
   const grade=finalScore>=1800?'S':finalScore>=900?'A':'B';
-  try{
-   ranks.push({name:playerName,score:finalScore,skin:selectedSkin});
-   ranks.sort((a,b)=>b.score-a.score);ranks=ranks.slice(0,10);
-   saveRanks();renderRanks();
-  }catch(e){}
+  submitSharedScore(finalScore);
   const last=passed&&currentStage===5&&!singleStageMode,stage=stageScenes[currentStage-1];const title=last?'🏆 พิชิตครบทั้ง 5 ด่าน!':passed?'🏆 ผ่านด่านสำเร็จ!':'💸 เงินหมด พลาดด่าน!';
   const gradeColor=grade==='S'?'#ffe36e':grade==='A'?'#83e8ff':'#d5b6ff';
   showModal(`<div class="stageResult">
@@ -500,8 +504,9 @@ button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;touch
  $('rankBtn').addEventListener('click',rankScreen);
  $('modalWrap').addEventListener('click',e=>{if(e.target===$('modalWrap'))closeModal()});
  document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(raceState)raceState.running=false;stopRace();stopRaceMusic();document.onkeydown=null;document.onkeyup=null;leaveGameFullscreen();closeModal();startHomeMusic()}});
- renderRanks();
+ if(sharedRanksEnabled){ranks=[];renderRanks();loadSharedRanks();setInterval(loadSharedRanks,30000)}else{ranks=readRanks();renderRanks()}
 })();
 </script>
 </body>
 </html>
+
