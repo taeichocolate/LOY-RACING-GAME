@@ -1,0 +1,507 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#06112d">
+<title>LOYRACING • Arcade Racing</title>
+<style>
+:root{--gold:#ffd56a;--gold2:#ff9f22;--blue:#42caff;--panel:#07183be8}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#04102b;color:#fff;font-family:"Trebuchet MS","Leelawadee UI","Segoe UI",sans-serif;touch-action:manipulation}button,input,select,textarea{font:inherit}button{letter-spacing:.025em}h1,h2,h3,.logo,.tagline,.btn,.rankTitle{letter-spacing:.035em}
+button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+#scene{position:fixed;inset:0;background:#061332 url("asset-2304780ce7c7.png") center center/cover no-repeat;transform:scale(1.015)}.homeAmbience{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}.homeBackdropPortrait{position:absolute;right:13%;bottom:-5vh;width:min(49vw,760px);height:82vh;object-fit:contain;object-position:center bottom;opacity:.94;filter:drop-shadow(0 0 28px #ff9b53aa);animation:portraitDrift 4.8s ease-in-out infinite alternate;pointer-events:none}@keyframes portraitDrift{to{transform:translateY(-7px) scale(1.015)}}.homeBurst{position:fixed;width:120px;height:120px;border-radius:50%;background:repeating-conic-gradient(from 0deg,transparent 0 8deg,#fff4b7 9deg 10deg,transparent 11deg 19deg,#ff58d2 20deg 21deg,transparent 22deg 30deg);-webkit-mask:radial-gradient(circle,transparent 0 13%,#000 19% 63%,transparent 70%);mask:radial-gradient(circle,transparent 0 13%,#000 19% 63%,transparent 70%);mix-blend-mode:screen;opacity:0;animation:burstFlash 3.2s ease-out infinite}.homeBurst.b1{left:55%;top:9%;animation-delay:-1.4s}.homeBurst.b2{right:5%;top:23%;width:90px;height:90px;animation-delay:-2.3s}@keyframes burstFlash{0%,100%{opacity:0;transform:scale(.15) rotate(0)}18%{opacity:.72}75%{opacity:.05;transform:scale(1.35) rotate(32deg)}}.driftKrathong{position:absolute;bottom:2%;width:clamp(90px,13vw,180px);height:auto;filter:drop-shadow(0 5px 6px #001b) drop-shadow(0 0 12px #ffc75c88);opacity:.82;animation:riverDrift 16s ease-in-out infinite alternate}.driftKrathong.k1{left:-3%;bottom:5%;animation-duration:19s}.driftKrathong.k2{left:29%;bottom:-1%;width:clamp(80px,10vw,145px);animation-duration:15s;animation-delay:-4s}.driftKrathong.k3{right:4%;bottom:3%;width:clamp(95px,14vw,190px);animation-duration:21s;animation-delay:-8s}.driftKrathong.k4{right:34%;bottom:8%;width:clamp(65px,8vw,115px);opacity:.6;animation-duration:17s;animation-delay:-6s}@keyframes riverDrift{0%{transform:translate3d(-16px,0,0) rotate(-4deg)}50%{transform:translate3d(35px,-13px,0) rotate(3deg)}100%{transform:translate3d(100px,-3px,0) rotate(-2deg)}}.skyLantern{position:absolute;top:-12%;width:22px;height:29px;border-radius:45% 45% 40% 40%;background:linear-gradient(90deg,#ff7d24,#ffd77a 45%,#ff9b30);border:1px solid #ffe6a2;box-shadow:0 0 10px #ffb33d,0 0 28px #ff812b;opacity:.76;animation:lanternRise linear infinite}.skyLantern:after{content:"";position:absolute;left:7px;right:7px;bottom:-4px;height:5px;border-radius:50%;background:#fff2a8;box-shadow:0 0 8px #ffb338}.l1{left:8%;animation-duration:25s;animation-delay:-8s}.l2{left:23%;transform:scale(.7);animation-duration:31s;animation-delay:-21s}.l3{left:48%;transform:scale(.56);animation-duration:28s;animation-delay:-13s}.l4{left:68%;animation-duration:33s;animation-delay:-25s}.l5{left:84%;transform:scale(.74);animation-duration:27s;animation-delay:-18s}.l6{left:94%;transform:scale(.5);animation-duration:36s;animation-delay:-6s}@keyframes lanternRise{0%{top:108%;margin-left:-10px;opacity:0;transform:rotate(-8deg) scale(.65)}12%{opacity:.8}50%{margin-left:20px;transform:rotate(8deg) scale(.88)}100%{top:-14%;margin-left:-5px;opacity:0;transform:rotate(-5deg) scale(.72)}}
+#scene:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(2,8,26,.74),rgba(2,8,26,.18) 56%,rgba(2,8,26,.32)),linear-gradient(0deg,rgba(2,8,26,.42),transparent 52%);pointer-events:none}
+#scene:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(2,7,25,.72),rgba(2,9,32,.28) 50%,rgba(2,7,25,.65)),linear-gradient(0deg,rgba(2,7,25,.38),transparent 42%,rgba(2,7,25,.24))}
+#app{position:relative;z-index:1;height:100dvh;width:100%;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:clamp(8px,1.4vh,16px) clamp(10px,2vw,28px);gap:8px}.homeBrand{flex:none;align-self:center;text-align:center;width:min(550px,94vw);height:clamp(136px,25vh,225px);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0}
+.shell{position:relative;width:min(1280px,100%);height:min(670px,78dvh);flex:1;min-height:0;margin:0 auto;display:grid;grid-template-columns:minmax(280px,.92fr) minmax(330px,1.08fr) minmax(280px,.92fr);gap:clamp(10px,1.25vw,20px);align-items:stretch}.leftCol{padding:clamp(12px,1.35vw,20px);border:1px solid #7fdcff66;border-radius:30px;background:linear-gradient(145deg,rgba(4,13,36,.66),rgba(4,17,43,.36));box-shadow:0 0 36px #29baff24,inset 0 0 32px #4adfff0c;backdrop-filter:blur(4px)}
+.brand{align-self:start;text-align:center;padding-top:clamp(4px,2vh,22px)}
+.logo{width:min(430px,50vh,90vw);height:auto;line-height:0;filter:drop-shadow(0 8px 18px #000b) drop-shadow(0 0 20px #27caff99)}.logo img{display:block;width:100%;height:auto;object-fit:contain}.homeBrand .tagline{margin:2px auto 0;padding:4px 14px;font-size:clamp(10px,1.3vw,15px)}
+.logo small{display:block;font-family:"Trebuchet MS","Leelawadee UI",sans-serif;font-style:normal;font-size:.22em;letter-spacing:.38em;color:#eaf7ff;-webkit-text-fill-color:#eaf7ff;-webkit-text-stroke:.5px #07558b;text-shadow:0 2px 0 #032d55,0 0 14px #20caff;margin-top:9px}
+.tagline{margin:12px auto 0;color:#e8f4ff;font-weight:800;font-size:clamp(11px,1.5vw,16px);text-shadow:0 2px 5px #000}
+.leftCol{position:relative;isolation:isolate;display:flex;flex-direction:column;align-items:center;gap:clamp(12px,2vh,20px);min-width:0}.leftCol>*:not(.founderBackdrop){position:relative;z-index:1}.founderBackdrop{position:absolute;z-index:0;right:-24%;bottom:-6%;width:82%;height:78%;object-fit:contain;object-position:bottom center;opacity:.48;filter:drop-shadow(0 0 28px #ff9f4c88);pointer-events:none;animation:founderGlow 5s ease-in-out infinite alternate}@keyframes founderGlow{from{opacity:.38;filter:drop-shadow(0 0 15px #ff9f4c55)}to{opacity:.52;filter:drop-shadow(0 0 30px #ff9f4caa)}}
+.heroKrathong{width:min(290px,90%);height:clamp(120px,17vh,165px);display:grid;place-items:center;filter:drop-shadow(0 12px 11px #001b) drop-shadow(0 0 17px #ffb8ed) drop-shadow(0 0 32px #ff9c37);animation:float 3.5s ease-in-out infinite;position:relative}.heroKrathong canvas{width:100%;height:100%;object-fit:contain}.heroKrathong:before{content:"";position:absolute;inset:18% 15%;border-radius:50%;background:radial-gradient(ellipse,#ff52d044,transparent 67%);filter:blur(10px);z-index:-1}
+.heroKrathong:after{content:"";position:absolute;left:12%;right:12%;height:14px;bottom:-9px;border-radius:50%;background:#4bdfff88;filter:blur(10px)}
+@keyframes float{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-13px) rotate(2deg)}}
+.menu{width:min(410px,100%);display:grid;gap:9px}.foot{color:#d9efff;text-shadow:0 2px 5px #000;font-weight:800}.tagline{padding:7px 15px;border:1px solid #ffd46a66;border-radius:999px;background:#06162ab8;box-shadow:0 0 15px #33c8ff22}
+.btn{position:relative;overflow:hidden;border:1px solid #ffe6a4;border-radius:17px;padding:12px 16px;color:#fff;font-weight:950;font-size:clamp(15px,2vw,20px);background:linear-gradient(180deg,#264e91f2,#091d49f5);box-shadow:0 4px 0 #06102c,0 0 13px #1b9fff66,inset 0 1px 0 #fff8;text-shadow:0 2px 4px #00102d;transition:transform .12s,filter .12s}
+.btn:active{transform:translateY(3px) scale(.99);filter:brightness(1.2)}
+.btn.primary{color:#4a2000;background:linear-gradient(180deg,#fff3a0,#ffc23c 55%,#f58a13);border:2px solid #fff0b2;box-shadow:0 5px 0 #98430b,0 0 25px #ffb52d99,inset 0 2px 5px #fff;text-shadow:0 1px 0 #fff9;font-size:clamp(18px,2.4vw,24px);padding:15px}
+.btn .ico{display:inline-block;width:35px;text-align:center;margin-right:8px;font-size:1.12em}
+.homePortrait{position:relative;isolation:isolate;align-self:stretch;min-width:0;min-height:0;overflow:hidden;display:flex;align-items:flex-end;justify-content:center;border:1px solid #ffe08b99;border-radius:26px;background:radial-gradient(ellipse at 50% 82%,#ff9d3a66,transparent 58%),linear-gradient(160deg,#06183388,#070f2c44);box-shadow:0 0 26px #ffae3d44,inset 0 0 35px #54dfff22}.homePortrait:before{content:"";position:absolute;inset:12% 8% 8%;z-index:-1;border-radius:50%;background:radial-gradient(ellipse,#ff4fc544,transparent 68%);filter:blur(18px)}.homePortrait img{display:block;width:100%;height:100%;object-fit:cover;object-position:62% center;filter:drop-shadow(0 0 22px #ff9b53aa);animation:portraitDrift 4.8s ease-in-out infinite alternate}.portraitLabel{position:absolute;z-index:2;left:50%;bottom:12px;transform:translateX(-50%);white-space:nowrap;padding:7px 16px;border:1px solid #ffd66b;border-radius:999px;background:linear-gradient(90deg,#06132beF,#153d5deF);color:#fff1b4;font-weight:1000;text-align:center;box-shadow:0 0 18px #ffbf4b66}.portraitLabel span{display:block;font-size:10px;color:#bde8ff;font-weight:800;letter-spacing:.08em}.rightCol{position:static;width:auto;height:100%;max-height:none;min-width:0;min-height:0;display:flex;flex-direction:column;gap:12px}.rankPanel{height:100%;max-height:none;min-height:0;overflow:auto}
+.rankPanel{border:1px solid #ffda7b;border-radius:22px;padding:14px;background:linear-gradient(145deg,rgba(5,20,54,.94),rgba(24,15,62,.88));box-shadow:0 0 0 2px #ffca4a22,0 0 28px #ffb32e55,inset 0 0 25px #55bfff16;backdrop-filter:blur(8px)}
+.rankTitle{text-align:center;font-weight:1000;font-size:clamp(17px,2.3vw,24px);color:#ffe18b;text-shadow:0 0 12px #ffad2e;margin:0 0 5px}
+.rankSub{text-align:center;color:#c7e6ff;font-size:11px;margin-bottom:10px}
+.rankList{display:grid;gap:6px}
+.rankItem{display:grid;grid-template-columns:29px 30px minmax(0,1fr) auto;align-items:center;gap:7px;padding:6px 8px;border-radius:11px;background:linear-gradient(90deg,#ffffff18,#ffffff08);border:1px solid #a7d9ff22;min-width:0}
+.rankItem:nth-child(-n+3){border-color:#ffd56a66;background:linear-gradient(90deg,#ffd56a20,#ffffff08)}
+.rankNum{font-weight:1000;color:#ffdc76;text-align:center}
+.rankIcon{font-size:22px;filter:drop-shadow(0 0 5px #ffce68)}
+.rankName{font-size:clamp(11px,1.3vw,14px);font-weight:850;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rankScore{font-size:clamp(10px,1.25vw,13px);font-weight:1000;color:#9beaff;white-space:nowrap}
+.rankFoot{text-align:center;font-size:10px;color:#b6cce8;margin-top:8px}.adminClearBtn{display:block;margin:10px auto 0;padding:6px 11px;border:1px solid #f5a09a88;border-radius:10px;background:#451d3677;color:#ffc8bf;font-family:inherit;font-size:11px;font-weight:700;cursor:pointer;transition:.18s}.adminClearBtn:hover{background:#752d3d;color:#fff;box-shadow:0 0 12px #ff5c6677}.emptyRank{grid-column:1/-1;text-align:center;padding:24px 8px;color:#c8d9ef;font-size:13px}
+.foot{font-size:11px;color:#d3e4f8;text-align:center;text-shadow:0 2px 5px #000}
+.modalWrap{position:fixed;z-index:10;inset:0;display:none;align-items:center;justify-content:center;padding:14px;background:#02091bd9;backdrop-filter:blur(7px)}
+.modalWrap.show{display:flex}
+.modal{width:min(560px,96vw);max-height:92dvh;overflow:auto;border:1px solid #ffdc81;border-radius:22px;padding:20px;background:linear-gradient(145deg,#102d5bfa,#100e39fa);box-shadow:0 0 35px #ffb52e55,0 20px 70px #000;text-align:center}
+.modal h2{margin:0 0 7px;color:#ffe18b;font-size:clamp(23px,4vw,34px);text-shadow:0 2px #76370d}
+.modal p{color:#d5eaff;font-size:13px;line-height:1.55}
+.close{float:right;border:1px solid #9ed9ff;background:#102d5b;color:#fff;border-radius:50%;width:34px;height:34px;font-weight:900}
+.nameInput{width:100%;padding:12px;border-radius:12px;border:1px solid #ffda7b;background:#061632;color:#fff;font-size:16px;text-align:center;margin:8px 0 12px;outline:none}
+.skins{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0 15px}
+.skin{border:1px solid #8bbcff66;border-radius:13px;background:#0a2047;color:#fff;padding:9px 3px;font-weight:800;font-size:12px}
+.skin span{display:block;font-size:30px}
+.skin.active{border:2px solid #ffe18b;background:linear-gradient(145deg,#633c88,#174779);box-shadow:0 0 15px #ffc85c88}
+.modalActions{display:flex;justify-content:center;gap:9px;flex-wrap:wrap;margin-top:12px}
+.smallBtn{border:1px solid #9ccfff88;border-radius:13px;padding:10px 15px;background:#173866;color:white;font-weight:900}
+@media(max-width:760px){
+ #app{overflow:auto}.shell{grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:minmax(350px,auto) auto;gap:10px;height:auto;flex:none;min-height:0;overflow:visible}.leftCol{grid-column:1;grid-row:1}.homePortrait{grid-column:2;grid-row:1;min-height:350px}.rightCol{grid-column:1/-1;grid-row:2;height:auto}.rankPanel{height:auto;max-height:310px}
+ .leftCol{gap:10px}.brand{padding-top:0}.logo{font-size:clamp(38px,8vw,64px)}
+ .heroKrathong{font-size:clamp(65px,12vw,100px)}
+ .menu{gap:7px}.btn{padding:10px 8px;font-size:clamp(12px,2vw,16px);border-radius:13px}.btn .ico{width:25px;margin-right:4px}
+ .rankPanel{padding:9px}.rankList{gap:4px}.rankItem{padding:5px 6px;grid-template-columns:23px 25px minmax(0,1fr) auto;gap:4px}
+ .rankIcon{font-size:18px}.rankFoot{font-size:9px}
+}
+@media(max-width:560px) and (orientation:portrait){
+ #app{padding:8px;overflow:auto;align-items:flex-start}
+ .homeBrand{align-self:center;height:clamp(132px,19vh,160px)}.homeBrand .logo{width:min(310px,88vw)}.shell{height:auto;min-height:0;flex:none;grid-template-columns:1fr;grid-template-rows:auto;gap:10px}.leftCol,.homePortrait,.rightCol{grid-column:1;grid-row:auto}.homePortrait{height:clamp(250px,42vh,350px);min-height:0}.homePortrait{height:clamp(250px,42vh,350px);min-height:0}
+ .leftCol{gap:8px}.brand{padding-top:2px}
+ .logo{font-size:48px}.tagline{margin-top:5px}
+ .heroKrathong{font-size:76px}
+ .menu{width:min(380px,100%);grid-template-columns:1fr 1fr}
+ .btn.primary{grid-column:1/-1}
+ .rightCol{position:static;width:100%;height:auto;max-height:none}.rankPanel{padding:10px;max-height:380px;overflow:auto}
+ .rankList{grid-template-columns:1fr 1fr}
+ .rankItem{grid-template-columns:21px 22px minmax(0,1fr);gap:3px}
+ .rankScore{grid-column:3;text-align:right;font-size:10px}
+ .rankName{font-size:10px}
+}
+@media(max-height:460px) and (orientation:landscape){
+ #app{padding:3px;gap:2px}.homeBrand{height:62px}.homeBrand .logo{width:min(225px,48vh)}.shell{height:calc(100dvh - 72px);grid-template-columns:minmax(220px,1fr) minmax(250px,1.08fr) minmax(220px,1fr);flex:none;gap:8px}.rightCol{max-height:none}
+ .logo{font-size:42px}.tagline{margin:4px}.heroKrathong{font-size:65px}
+ .leftCol{gap:5px}.menu{gap:5px}.btn{padding:7px 10px}
+ .rankPanel{padding:7px}.rankItem{padding:3px 6px}.rankList{gap:3px}
+ .rankTitle{font-size:16px}.rankSub,.rankFoot{display:none}
+}
+
+/* Part 2: Krathong workshop */
+.workshop{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:center;text-align:left}
+.previewStage{min-height:300px;border-radius:20px;border:1px solid #8adfff66;background:radial-gradient(ellipse at 50% 70%,#1765a9aa,#071b42 62%,#06132d);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;box-shadow:inset 0 0 35px #35baff22}
+.previewStage:before{content:"";position:absolute;left:-10%;right:-10%;bottom:18%;height:30%;border-radius:50%;background:radial-gradient(ellipse,#53d9ff55,transparent 70%);filter:blur(13px)}
+.krathongArt{position:relative;width:min(290px,90%);height:250px;display:flex;align-items:center;justify-content:center;filter:drop-shadow(0 0 18px var(--glow))}.krathongPhoto{display:block;width:100%;height:190px;object-fit:contain;filter:drop-shadow(0 12px 11px #001b) drop-shadow(0 0 15px var(--glow)) drop-shadow(0 0 6px var(--candle));transform:perspective(500px) rotateX(7deg)}.skin .boatSkinThumb{display:block;width:100%;height:64px;object-fit:contain;margin:2px auto 5px;filter:drop-shadow(0 4px 5px #0009)}
+.krathongGlow{position:absolute;bottom:18px;width:85%;height:28px;border-radius:50%;background:var(--glow);opacity:.5;filter:blur(15px)}
+.krathongLeaves{position:absolute;bottom:35px;width:92%;height:78px;border-radius:50% 50% 40% 40%;background:linear-gradient(180deg,#6bd35d,#125d39 80%);border:4px solid #b5ef77;box-shadow:inset 0 -10px 0 #083e2c,0 8px 15px #0008}
+.petal{position:absolute;bottom:65px;width:50px;height:115px;border-radius:90% 90% 35% 35%;background:linear-gradient(90deg,color-mix(in srgb,var(--flower),#6a1b78 24%),var(--flower) 48%,#fff3 53%,var(--flower));transform-origin:50% 100%;border:1px solid #fff8;box-shadow:inset 0 -8px 10px #0003}
+.petal.p1{transform:rotate(-58deg) scale(.78);left:27px}.petal.p2{transform:rotate(-32deg) scale(.95);left:57px}.petal.p3{transform:rotate(-10deg);left:91px}.petal.p4{transform:rotate(10deg);right:91px}.petal.p5{transform:rotate(32deg) scale(.95);right:57px}.petal.p6{transform:rotate(58deg) scale(.78);right:27px}
+.petal.center{width:48px;height:120px;bottom:68px;left:calc(50% - 24px);transform:rotate(0deg) scale(.9);filter:brightness(1.2)}
+.candle{position:absolute;bottom:123px;left:calc(50% - 7px);width:14px;height:55px;border-radius:5px;background:linear-gradient(90deg,#9a4b14,#ffe4a0,#b76a24);box-shadow:0 0 12px var(--candle)}
+.flame{position:absolute;bottom:174px;left:calc(50% - 10px);width:20px;height:31px;border-radius:70% 20% 70% 20%;transform:rotate(45deg);background:radial-gradient(circle at 35% 65%,#fff 0 10%,var(--fire) 32%,#ff7a19 72%,transparent 75%);filter:drop-shadow(0 0 10px var(--fire));animation:flicker .7s infinite alternate}
+@keyframes flicker{to{transform:rotate(38deg) scale(.9);filter:drop-shadow(0 0 18px var(--fire))}}
+.incense{position:absolute;bottom:167px;left:calc(50% + 16px);height:37px;width:3px;background:#e8b87a;transform:rotate(7deg);box-shadow:0 0 6px var(--fire)}
+.smoke{position:absolute;bottom:200px;left:calc(50% + 12px);width:18px;height:24px;border-radius:50%;border-left:2px solid #dceeff88;filter:blur(1px)}
+.customControls{display:grid;gap:10px}
+.colorGroup{padding:10px;border:1px solid #8fcaff44;border-radius:13px;background:#061a39aa}
+.colorGroup h3{margin:0 0 8px;color:#ffe18b;font-size:14px}
+.swatches{display:flex;flex-wrap:wrap;gap:7px}
+.swatch{width:30px;height:30px;border-radius:50%;border:2px solid #ffffff66;box-shadow:0 2px 6px #0008;position:relative;padding:0}
+.swatch.selected{outline:2px solid #ffe18b;outline-offset:2px}
+.swatch.selected:after{content:"✓";position:absolute;inset:0;display:grid;place-items:center;color:#fff;font-size:15px;font-weight:1000;text-shadow:0 1px 4px #000}
+.workshopInput{width:100%;padding:11px;border-radius:12px;border:1px solid #ffda7b;background:#061632;color:#fff;font-size:16px;text-align:center}
+@media(max-width:620px){
+ .workshop{grid-template-columns:1fr;gap:10px}
+ .previewStage{min-height:235px}
+ .krathongArt{transform:scale(.83);height:210px}
+ .customControls{grid-template-columns:1fr 1fr}
+ .customControls .colorGroup:first-child{grid-column:1/-1}
+}
+
+</style>
+</head>
+<body>
+<div id="scene" aria-hidden="true"></div>
+<div class="homeAmbience" aria-hidden="true"><canvas class="driftKrathong k1" width="512" height="341" data-krathong="1"></canvas><canvas class="driftKrathong k2" width="512" height="341" data-krathong="4"></canvas><canvas class="driftKrathong k3" width="512" height="341" data-krathong="6"></canvas><canvas class="driftKrathong k4" width="512" height="341" data-krathong="3"></canvas><i class="skyLantern l1"></i><i class="skyLantern l2"></i><i class="skyLantern l3"></i><i class="skyLantern l4"></i><i class="skyLantern l5"></i><i class="skyLantern l6"></i><i class="homeBurst b1"></i><i class="homeBurst b2"></i></div>
+<main id="app">
+ <header class="homeBrand">
+    <div class="logo"><img src="asset-4aa48c940814.png" alt="LOYKRAN Arcade Racing by จำเต้รังสิต"></div>
+    <div class="tagline">ศึกกระทงซิ่ง • เทศกาลลอยกระทงยามค่ำคืน</div>
+   </header>
+ <section class="shell">
+  <div class="leftCol">
+   
+   <div class="heroKrathong" aria-label="กระทงดอกบัว 3D"><canvas width="512" height="341" data-krathong="7"></canvas></div>
+   <nav class="menu" aria-label="เมนูหลัก">
+    <button class="btn primary" id="startBtn"><span class="ico">▶</span>เริ่มเกม</button>
+    <button class="btn" id="selectBtn"><span class="ico">🪷</span>เลือกกระทง</button>
+    <button class="btn" id="stageSelectBtn"><span class="ico">🗺️</span>เลือกด่าน</button>
+    <button class="btn" id="howBtn"><span class="ico">🎮</span>วิธีเล่น</button>
+    <button class="btn" id="rankBtn"><span class="ico">🏆</span>อันดับคะแนน</button>
+   </nav>
+   <div class="foot">แตะปุ่มเพื่อเริ่มต้นการผจญภัย</div>
+  </div>
+  <div class="homePortrait"><img src="asset-43927c8657e5.png" alt="ผู้เล่นถือกระทงดอกบัว"><div class="portraitLabel">จำเต้รังสิต <span>นักซิ่งแห่งสายน้ำ</span></div></div>
+  <aside class="rightCol">
+   <section class="rankPanel">
+    <h2 class="rankTitle">🏆 TOP 10 RANKING</h2>
+    <div class="rankSub">กระทงคะแนนสูงสุด • นักซิ่งแห่งสายน้ำ</div>
+    <div class="rankList" id="rankList" aria-live="polite"></div>
+    <div class="rankFoot">อันดับจะบันทึกในอุปกรณ์นี้โดยอัตโนมัติ</div><button class="adminClearBtn" id="clearRanksHome" type="button">🛠️ ล้างอันดับ (ผู้ดูแล)</button>
+   </section>
+  </aside>
+ </section>
+</main>
+
+<div class="modalWrap" id="modalWrap" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+ <div class="modal" id="modal"></div>
+</div>
+<audio id="homeMusic" preload="none" loop src="asset-b5e42e5e552f.m4a"></audio>
+
+<script>
+(() => {
+ const $ = id => document.getElementById(id);
+ let homeFireworkTimer=null,homeSfxContext=null;
+ function playHomeFirework(){try{const C=window.AudioContext||window.webkitAudioContext;if(!C)return;homeSfxContext=homeSfxContext||new C();if(homeSfxContext.state==='suspended')homeSfxContext.resume();const t=homeSfxContext.currentTime,o=homeSfxContext.createOscillator(),g=homeSfxContext.createGain();o.type='sine';o.frequency.setValueAtTime(520,t);o.frequency.exponentialRampToValueAtTime(1500,t+.32);o.frequency.exponentialRampToValueAtTime(240,t+.64);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.045,t+.28);g.gain.exponentialRampToValueAtTime(.0001,t+.72);o.connect(g);g.connect(homeSfxContext.destination);o.start(t);o.stop(t+.74)}catch(e){}}
+ function startHomeMusic(){const a=$('homeMusic');if(a){a.volume=.5;if(a.paused){const p=a.play();if(p&&p.catch)p.catch(()=>{})}}if(!homeFireworkTimer){playHomeFirework();homeFireworkTimer=setInterval(playHomeFirework,8500)}}
+ function stopHomeMusic(){const a=$('homeMusic');if(a){a.pause();try{a.currentTime=0}catch(e){}}if(homeFireworkTimer){clearInterval(homeFireworkTimer);homeFireworkTimer=null}}
+ document.addEventListener('pointerdown',()=>{if(!$('modalWrap').classList.contains('show'))startHomeMusic()},{passive:true});
+ const KEY='loyracing_home_top10_v1';
+ const skinNames=['แดง','ส้ม','ทอง','เขียว','ฟ้า','น้ำเงิน','ม่วง','ชมพู'];
+ const skinEmojis=['🪷','🏵️','🌼','🌺','💠','🪷','🌸','🌷'];
+ let playerName=localStorage.getItem('loyracing_player_name')||'ผู้เล่น';
+ let selectedSkin=Number(localStorage.getItem('loyracing_skin')||6);
+ let ranks=[];
+ const demo=[
+  {name:'กระทงสายฟ้า',score:168640,skin:6},
+  {name:'น้องลอยแก้ว',score:152300,skin:2},
+  {name:'สายซิ่งคลอง',score:139850,skin:4},
+  {name:'Lotus King',score:121400,skin:0},
+  {name:'เจ้าพระยารัน',score:108900,skin:3},
+  {name:'น้องพลุไฟ',score:97800,skin:1},
+  {name:'Midnight Boat',score:85400,skin:5},
+  {name:'กระทงเพชร',score:73900,skin:7},
+  {name:'River Star',score:62500,skin:2},
+  {name:'นักซิ่งน้อย',score:51000,skin:0}
+ ];
+ function readRanks(){
+  try{const saved=JSON.parse(localStorage.getItem(KEY)||'null');return Array.isArray(saved)?saved:demo.slice()}
+  catch(e){return demo.slice()}
+ }
+ function saveRanks(){try{const data=JSON.stringify(ranks.slice(0,10));localStorage.setItem(KEY,data);localStorage.setItem('loyracing_ranks',data)}catch(e){}}
+ function clearRanks(){const pin=prompt('กรอกรหัสผู้ดูแลเพื่อจัดการอันดับ');if(pin===null)return;if(pin!=='11110000'){alert('รหัสผู้ดูแลไม่ถูกต้อง');return}if(!confirm('ผู้ดูแลต้องการล้างคะแนนอันดับทั้งหมดใช่ไหม?'))return;ranks=[];try{localStorage.setItem(KEY,'[]');localStorage.setItem('loyracing_ranks','[]')}catch(e){}renderRanks();const modalList=$('modal').querySelector('.rankList');if(modalList)modalList.innerHTML='<div class="emptyRank">ยังไม่มีคะแนน</div>';toast('ล้างอันดับคะแนนแล้ว')}
+ function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+ function renderRanks(){
+  ranks=readRanks().sort((a,b)=>Number(b.score)-Number(a.score)).slice(0,10);
+  $('rankList').innerHTML=ranks.length?ranks.map((r,i)=>`<div class="rankItem"><span class="rankNum">${i+1}</span><span class="rankIcon">${skinEmojis[Number(r.skin)||0]}</span><span class="rankName">${esc(r.name||'ผู้เล่น')}</span><span class="rankScore">${Number(r.score||0).toLocaleString('th-TH')}</span></div>`).join(''):'<div class="emptyRank">ยังไม่มีคะแนน</div>';
+ }
+ function showModal(content){$('modal').innerHTML=content;$('modalWrap').classList.add('show')}
+ function closeModal(){$('modalWrap').classList.remove('show')}
+ function leaveGameFullscreen(){const w=$('modalWrap');w.classList.remove('raceFullscreen');if(document.fullscreenElement&&document.exitFullscreen)document.exitFullscreen().catch(()=>{})}
+ function chooseScreen(){
+  showModal(`<button class="close" id="closeModal">×</button><h2 id="modalTitle">เลือกกระทงของคุณ</h2><p>ตั้งชื่อผู้เล่นและเลือกกระทงคู่ใจ ก่อนลงสนามแข่งขัน</p>
+  <input class="nameInput" id="playerName" maxlength="16" placeholder="ชื่อผู้เล่น" value="${esc(playerName)}">
+  <div class="skins">${skinNames.map((n,i)=>`<button class="skin ${i===selectedSkin?'active':''}" data-skin="${i}"><canvas class="boatSkinThumb" width="512" height="341" data-krathong="${skinSpriteIndices[i]}"></canvas>${n}</button>`).join('')}</div>
+  <div class="modalActions"><button class="smallBtn" id="cancelSelect">กลับหน้าหลัก</button><button class="btn primary" id="saveSelect">บันทึกการเลือก</button></div>`);
+  renderKrathongCanvases($('modal'));$('closeModal').onclick=closeModal;$('cancelSelect').onclick=closeModal;
+  $('modal').querySelectorAll('[data-skin]').forEach(b=>b.addEventListener('click',()=>{selectedSkin=Number(b.dataset.skin);$('modal').querySelectorAll('[data-skin]').forEach(x=>x.classList.toggle('active',x===b))}));
+  $('saveSelect').onclick=()=>{
+   playerName=($('playerName').value||'').trim().slice(0,16)||'ผู้เล่น';
+   customColors.flower=palettes.flower[skinSpriteIndices[selectedSkin]];try{localStorage.setItem('loyracing_player_name',playerName);localStorage.setItem('loyracing_skin',String(selectedSkin));localStorage.setItem('loyracing_custom_colors',JSON.stringify(customColors))}catch(e){}
+   closeModal();toast('บันทึกผู้เล่น '+playerName+' แล้ว');
+  };
+ }
+ function howScreen(){
+  showModal(`<button class="close" id="closeModal">×</button>
+  <h2 id="modalTitle">🎮 วิธีเล่น LOYRACING</h2>
+  <p>บังคับกระทงให้แล่นไปข้างหน้า หลบสิ่งกีดขวาง และเก็บเหรียญให้ได้มากที่สุด</p>
+  <style>
+   .howGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0;text-align:left}
+   .howCard{background:#071a35;border:1px solid #4b78a8;border-radius:15px;padding:13px;min-width:0}
+   .howCard h3{margin:0 0 8px;color:#ffe18b;font-size:16px}
+   .keyRow{display:flex;align-items:center;gap:8px;margin:7px 0;color:#fff;font-size:13px}
+   .keyCap{display:inline-flex;align-items:center;justify-content:center;min-width:34px;height:32px;padding:0 8px;border-radius:8px;background:linear-gradient(#fff,#b9c9df);color:#102342;font-weight:1000;box-shadow:0 3px 0 #637b9b}
+   .obstacleRow{display:flex;align-items:center;gap:10px;margin:10px 0;color:#fff;font-size:13px}
+   .obIcon{width:54px;height:48px;display:grid;place-items:center;border-radius:11px;background:linear-gradient(145deg,#123e61,#071a35);font-size:30px;flex:none}
+   .howTip{background:#182b4b;border-left:4px solid #ffd66b;border-radius:9px;padding:10px 12px;color:#fff;font-size:13px;text-align:left}
+   .demoLane{height:104px;position:relative;overflow:hidden;border-radius:13px;border:1px solid #46749a;background:repeating-linear-gradient(0deg,#0b4564 0 18px,#0d5870 19px 20px);margin:10px 0}
+   .demoBoat{position:absolute;left:43%;bottom:7px;font-size:37px;filter:drop-shadow(0 0 8px #ff66d4)}
+   .demoObstacle{position:absolute;font-size:29px;top:12px}
+   .demoObstacle.a{left:17%}.demoObstacle.b{right:15%}
+   @media(max-width:560px){.howGrid{grid-template-columns:1fr}.howCard{padding:11px}.demoLane{height:88px}}
+  </style>
+  <div class="howGrid">
+   <section class="howCard"><h3>🕹️ ปุ่มควบคุม</h3>
+    <div class="keyRow"><span class="keyCap">◀</span><span>เลี้ยวกระทงไปทางซ้าย</span></div>
+    <div class="keyRow"><span class="keyCap">▶</span><span>เลี้ยวกระทงไปทางขวา</span></div>
+    <div class="keyRow"><span class="keyCap">▲</span><span>กระโดดข้ามสิ่งกีดขวางเตี้ย</span></div>
+    <div class="keyRow"><span class="keyCap">A / D</span><span>ใช้แทนซ้าย / ขวาบนคีย์บอร์ด</span></div>
+    <div class="keyRow"><span class="keyCap">Space</span><span>ใช้กระโดดบนคีย์บอร์ด</span></div>
+   </section>
+   <section class="howCard"><h3>📱 ควบคุมบนมือถือ</h3>
+    <div class="keyRow"><span class="keyCap">◀</span><span>แตะปุ่มซ้ายเพื่อเลี้ยวซ้าย</span></div>
+    <div class="keyRow"><span class="keyCap">▶</span><span>แตะปุ่มขวาเพื่อเลี้ยวขวา</span></div>
+    <div class="keyRow"><span class="keyCap">⤊</span><span>แตะปุ่มกระโดดเพื่อยกกระทง</span></div>
+    <p style="font-size:12px;color:#b9d8f4;margin:8px 0 0">หรือปัดนิ้วซ้าย–ขวาบนพื้นที่สนามเพื่อเปลี่ยนเลน</p>
+   </section>
+  </div>
+  <section class="howCard"><h3>🌊 ตัวอย่างสนามและสิ่งกีดขวาง</h3>
+   <div class="demoLane"><span class="demoObstacle a">🪨</span><span class="demoObstacle b">🦆</span><span class="demoBoat">🪷</span></div>
+   <div class="obstacleRow"><span class="obIcon">🪨</span><span><b style="color:#ffe18b">ก้อนหิน / ขอนไม้เตี้ย</b><br>กดปุ่มกระโดดเพื่อข้าม หรือเลี้ยวหลบ</span></div>
+   <div class="obstacleRow"><span class="obIcon">🛶</span><span><b style="color:#ffe18b">เรือ / ทุ่นขนาดใหญ่</b><br>ต้องเลี้ยวซ้ายหรือขวาเพื่อหลบ ห้ามพุ่งชน</span></div>
+   <div class="obstacleRow"><span class="obIcon">🌿</span><span><b style="color:#ffe18b">ผักตบชวา / สิ่งกีดขวางบนผิวน้ำ</b><br>สังเกตตำแหน่งแล้วเปลี่ยนเลนให้ทัน</span></div>
+   <div class="obstacleRow"><span class="obIcon">🪙</span><span><b style="color:#ffe18b">เหรียญ</b><br>เก็บระหว่างทางเพื่อเพิ่มคะแนน</span></div>
+  </section>
+  <div class="howTip">💡 เคล็ดลับ: มองสิ่งกีดขวางที่อยู่ด้านหน้าไว้ก่อน อย่ารอจนเข้าใกล้ แล้วค่อยตัดสินใจหลบ</div>
+  <div class="modalActions"><button class="smallBtn" id="backHowHome">กลับหน้าหลัก</button><button class="btn primary" id="howChoose">เลือกกระทง</button></div>`);
+  $('closeModal').onclick=closeModal;
+  $('backHowHome').onclick=closeModal;
+  $('howChoose').onclick=customizeScreen;
+ }
+ function rankScreen(){
+  showModal(`<button class="close" id="closeModal">×</button><h2 id="modalTitle">🏆 อันดับคะแนน TOP 10</h2><div class="rankList">${ranks.length?ranks.map((r,i)=>`<div class="rankItem"><span class="rankNum">${i+1}</span><span class="rankIcon">${skinEmojis[Number(r.skin)||0]}</span><span class="rankName">${esc(r.name)}</span><span class="rankScore">${Number(r.score).toLocaleString('th-TH')}</span></div>`).join(''):'<div class="emptyRank">ยังไม่มีคะแนน</div>'}</div><div class="modalActions"><button class="adminClearBtn" id="clearRanksModal" type="button">🛠️ ล้างอันดับ (ผู้ดูแล)</button><button class="btn primary" id="okRank">ปิด</button></div>`);
+  $('closeModal').onclick=closeModal;$('okRank').onclick=closeModal;$('clearRanksModal').onclick=clearRanks;
+ }
+ function toast(msg){
+  let old=$('toast');if(old)old.remove();
+  const t=document.createElement('div');t.id='toast';t.textContent=msg;
+  Object.assign(t.style,{position:'fixed',zIndex:30,left:'50%',bottom:'18px',transform:'translateX(-50%)',padding:'10px 16px',border:'1px solid #ffe18b',borderRadius:'14px',background:'#071a39f2',color:'#fff',fontWeight:'900',boxShadow:'0 0 20px #ffbd4d66',maxWidth:'90vw',textAlign:'center'});
+  document.body.appendChild(t);setTimeout(()=>t.remove(),2200);
+ }
+
+ const customColors={flower:'#ed42c8',candle:'#ffd66b',fire:'#ff9b27'};
+ const krathongSprite="asset-5dcaa24d8f6e.png";
+ const krathongAtlas=new Image();
+ function drawKrathongCanvas(canvas,index){if(!canvas||!krathongAtlas.complete||!krathongAtlas.naturalWidth)return;const ctx=canvas.getContext('2d'),w=krathongAtlas.naturalWidth/3,h=krathongAtlas.naturalHeight/3;ctx.clearRect(0,0,canvas.width,canvas.height);ctx.drawImage(krathongAtlas,(index%3)*w,Math.floor(index/3)*h,w,h,0,0,canvas.width,canvas.height)}
+ function renderKrathongCanvases(root=document){root.querySelectorAll('canvas[data-krathong]').forEach(c=>drawKrathongCanvas(c,Number(c.dataset.krathong)||0))}
+ krathongAtlas.onload=()=>renderKrathongCanvases();krathongAtlas.src=krathongSprite;
+ const palettes={
+  flower:['#ed42c8','#ff526f','#ff9b35','#ffd34f','#79d85b','#37d7e8','#537cff','#a76aff','#ffffff'],
+  candle:['#ffd66b','#fff2cc','#ff9d42','#f6e5a4','#ff6b6b','#b7e7ff'],
+  fire:['#ff9b27','#fff06a','#4ceaff','#ff4c9a','#8d75ff','#7dff9b']
+ };
+ const skinSpriteIndices=[1,2,3,4,5,6,7,0];
+ function spritePosition(i){return ((i%3)*50)+'% '+(Math.floor(i/3)*50)+'%'}
+ function flowerSpriteIndex(color){const i=palettes.flower.indexOf(color);return i<0?0:i}
+ function paintPreview(){
+  const art=$('krathongArt');if(!art)return;
+  art.style.setProperty('--flower',customColors.flower);
+  art.style.setProperty('--candle',customColors.candle);
+  art.style.setProperty('--fire',customColors.fire);
+  art.style.setProperty('--glow',customColors.fire);
+   const photo=$('krathongPhoto');if(photo){photo.dataset.krathong=flowerSpriteIndex(customColors.flower);drawKrathongCanvas(photo,Number(photo.dataset.krathong))}
+  document.querySelectorAll('[data-color-group]').forEach(group=>{
+   const key=group.dataset.colorGroup;
+   group.querySelectorAll('.swatch').forEach(btn=>btn.classList.toggle('selected',btn.dataset.color===customColors[key]));
+  });
+ }
+ function colorGroup(key,label){
+  return `<section class="colorGroup" data-color-group="${key}"><h3>${label}</h3><div class="swatches">${palettes[key].map(c=>`<button class="swatch" type="button" aria-label="${label} ${c}" data-key="${key}" data-color="${c}" style="background:${c}"></button>`).join('')}</div></section>`;
+ }
+ function customizeScreen(){
+  showModal(`<button class="close" id="closeModal" aria-label="ปิด">×</button><h2 id="modalTitle">แต่งกระทงของคุณ</h2>
+   <p>ตั้งชื่อผู้เล่น แล้วเลือกสีเทียน ดอกบัว และแสงไฟได้ตามใจ</p>
+   <input class="workshopInput" id="playerNameEdit" maxlength="16" placeholder="ชื่อผู้เล่น" value="${esc(playerName)}">
+   <div class="workshop">
+    <div class="previewStage"><div class="krathongArt" id="krathongArt" style="--flower:${customColors.flower};--candle:${customColors.candle};--fire:${customColors.fire};--glow:${customColors.fire}"><div class="krathongGlow"></div><canvas class="krathongPhoto" id="krathongPhoto" width="512" height="341" data-krathong="0"></canvas></div></div>
+    <div class="customControls">
+     ${colorGroup('flower','🌸 สีดอกบัว')}
+     ${colorGroup('candle','🕯️ สีเทียน')}
+     ${colorGroup('fire','✨ สีไฟ / แสงเรือง')}
+    </div>
+   </div>
+   <div class="modalActions"><button class="smallBtn" id="cancelCustom">กลับหน้าหลัก</button><button class="btn primary" id="saveCustom">บันทึกกระทง</button></div>`);
+  $('closeModal').onclick=closeModal;$('cancelCustom').onclick=closeModal;
+  $('modal').querySelectorAll('.swatch').forEach(btn=>btn.addEventListener('click',()=>{
+   customColors[btn.dataset.key]=btn.dataset.color;paintPreview();
+  }));
+  $('saveCustom').onclick=()=>{
+   playerName=($('playerNameEdit').value||'').trim().slice(0,16)||'ผู้เล่น';
+   try{
+    localStorage.setItem('loyracing_player_name',playerName);
+    localStorage.setItem('loyracing_custom_colors',JSON.stringify(customColors));
+   }catch(e){}
+   closeModal();toast('บันทึกกระทงของ '+playerName+' แล้ว');
+  };
+  paintPreview();
+ }
+ try{
+  const savedColors=JSON.parse(localStorage.getItem('loyracing_custom_colors')||'null');
+  if(savedColors)Object.assign(customColors,savedColors);
+ }catch(e){}
+ let raceLoop=null,raceSpawn=null,raceState=null,currentStage=1,carriedMoney=1000,stageStartMoney=1000,coinAudio=null,singleStageMode=false,musicTimer=null,musicStep=0,stagePopTimer=null;
+ const stageCharacterAtlas="asset-dbb16620553a.png";
+ const stageScenes=[{"name":"สวนสาธารณะ","icon":"🌳","image":"asset-fca6ac61cad0.jpg"},{"name":"แม่น้ำเจ้าพระยา","icon":"🌉","image":"asset-9bc0af14d8dd.jpg"},{"name":"คลองแสนแสบ","icon":"🚆","image":"asset-d5a877d59ce3.jpg"},{"name":"สุสานผีสิง","icon":"🌙","image":"asset-2eb64fbcf774.jpg"},{"name":"ถนนกระทงซิ่ง","icon":"🏍️","image":"asset-5ea66597a680.jpg"}];
+ const obstacleSprite="asset-256dd41cf2c8.png";
+ const obstacleBasePositions={hyacinth:'0% 100%',duck:'50% 100%',rock:'50% 0%',boat:'100% 0%'};
+ const obstacleExtraSprite="asset-c639fe72884b.png";
+ const obstacleExtraPositions={buoy:'0% 0%',trash:'50% 0%',teen:'100% 0%',ghost:'0% 50%',skull:'50% 50%',hand:'100% 50%',motorcycle:'0% 100%',cone:'50% 100%',pothole:'100% 100%'};
+ const stageObstacleSets=[['hyacinth','duck','rock'],['buoy','boat','hyacinth'],['trash','boat','teen'],['ghost','skull','hand'],['motorcycle','cone','pothole']];
+ function stopRace(){
+  if(raceLoop){clearInterval(raceLoop);raceLoop=null}
+  if(raceSpawn){clearInterval(raceSpawn);raceSpawn=null}
+  if(stagePopTimer){clearInterval(stagePopTimer);stagePopTimer=null}
+ }
+ function stopRaceMusic(){if(musicTimer){clearInterval(musicTimer);musicTimer=null}}
+ function start(){
+  stopRace();stopRaceMusic();stopHomeMusic(); closeModal();
+  stageStartMoney=carriedMoney;raceState={steerX:0,steerInput:0,dragSteer:false,jump:0,score:0,coins:0,money:carriedMoney,time:60,items:[],running:false};const stage=stageScenes[currentStage-1];prepareCoinAudio();startRaceMusic();
+  showModal(`<div class="raceUI" id="raceUI">
+   <style>
+    .raceUI{width:min(100%,900px);color:#fff;text-align:center}.modalWrap.raceFullscreen{padding:0;background:#000}.modalWrap.raceFullscreen .modal{width:100vw;max-width:none;height:100dvh;max-height:none;margin:0;padding:8px;border:0;border-radius:0;background:#03132b;box-shadow:none;overflow:hidden;display:flex;align-items:stretch;justify-content:center}.raceFullscreen .raceUI{width:100%;max-width:none;height:100%;display:flex;flex-direction:column;justify-content:space-between}.raceFullscreen .raceScene{width:100%;height:auto;flex:1;min-height:0;max-height:none}.raceFullscreen .raceTop{flex:none}.raceFullscreen .raceControls{flex:none}.raceFullscreen .raceHint{flex:none}.raceFullscreen .modalActions{flex:none}
+    .raceTop{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:0 0 10px}
+    .raceStat{background:#081b35;border:1px solid #3b709a;border-radius:11px;padding:7px 4px;font-weight:900;font-size:14px}
+    .raceStat small{display:block;color:#9fc9ee;font-size:10px;font-weight:700}
+    .raceScene{height:min(58vh,440px);min-height:300px;position:relative;overflow:hidden;border-radius:18px;border:2px solid #e9b84f;background:#061332;perspective:500px;box-shadow:0 0 24px #46dfff55;touch-action:none}
+    .stageCharacterPop{position:absolute;z-index:9;top:4%;right:2%;display:flex;flex-direction:column;align-items:center;gap:3px;width:min(320px,36%);padding:8px 10px 13px;border:1px solid #ffe58d;border-radius:22px;background:linear-gradient(150deg,#061a36ef,#133e63db);box-shadow:0 0 24px #ffbd45bb,0 8px 24px #000a;animation:characterEntrance .48s cubic-bezier(.18,.86,.32,1.25) both;pointer-events:none}.stageCharacterFrame{position:relative;width:clamp(180px,21vw,270px);aspect-ratio:3/5;overflow:hidden;filter:drop-shadow(0 0 18px #6deaffbb);animation:characterBob .72s ease-in-out infinite alternate}.stageCharacterSprite{position:absolute;top:0;width:500%;height:100%;max-width:none;object-fit:fill}.stageCharacterLine{max-width:100%;padding:7px 12px;border-radius:99px;background:#0b2e51ef;color:#fff1bb;font-size:clamp(12px,1.8vw,17px);font-weight:1000;text-align:center;text-shadow:0 2px 5px #000;line-height:1.3}@keyframes characterEntrance{from{opacity:0;transform:translate(30px,-12px) scale(.62)}to{opacity:1;transform:translate(0,0) scale(1)}}@keyframes characterBob{to{transform:translateY(-9px) rotate(-1.4deg)}}
+    .raceCountdown{position:absolute;inset:0;z-index:10;display:grid;place-items:center;background:radial-gradient(ellipse,rgba(3,12,33,.64),rgba(3,12,33,.08) 65%,transparent);font-family:Impact,Haettenschweiler,sans-serif;font-style:italic;font-size:clamp(100px,26vw,220px);font-weight:1000;color:#fff2a5;-webkit-text-stroke:2px #ffb02c;text-shadow:0 0 12px #fff,0 0 36px #ffae24,0 0 80px #fa4dff;animation:countPop .66s cubic-bezier(.18,.82,.25,1) both}.raceCountdown.ready{font-family:"Trebuchet MS","Leelawadee UI",sans-serif;font-size:clamp(48px,12vw,94px);letter-spacing:.06em;color:#87edff;-webkit-text-stroke:1px #fff;text-transform:uppercase}.raceCountdown.go{font-size:clamp(82px,22vw,180px);color:#aaff9b;-webkit-text-stroke:2px #fff}@keyframes countPop{0%{opacity:0;transform:scale(.48) rotate(-10deg)}25%{opacity:1;transform:scale(1.16) rotate(3deg)}100%{opacity:1;transform:scale(1) rotate(0)}}
+    .stageBadge{position:absolute;top:9px;left:9px;z-index:7;padding:6px 13px;border:2px solid #e8ad39;border-radius:5px 14px 5px 14px;background:linear-gradient(110deg,#07172bea,#102c46e8);color:#fff2c4;font-weight:950;font-size:clamp(12px,2.4vw,18px);text-shadow:0 2px 4px #000;box-shadow:0 0 10px #ffb83366}
+    .raceHorizon{position:absolute;left:0;right:0;top:27%;height:9%;background:transparent;opacity:0}
+    .water{position:absolute;inset:35% 0 0;background:repeating-linear-gradient(175deg,transparent 0 13px,rgba(105,238,255,.24) 14px 16px,transparent 17px 29px);opacity:.42;animation:waterFlow .65s linear infinite}
+    @keyframes waterFlow{to{background-position:0 44px,0 0}}
+    .speedLine{position:absolute;top:36%;width:2px;height:48%;background:linear-gradient(transparent,#a8f5ff,transparent);opacity:.5;animation:speedMove .45s linear infinite}
+    .speedLine.s1{left:13%}.speedLine.s2{left:28%;animation-delay:.12s}.speedLine.s3{right:17%;animation-delay:.2s}.speedLine.s4{right:31%;animation-delay:.08s}
+    @keyframes speedMove{from{transform:translateY(-80px)}to{transform:translateY(100px)}}
+    .laneMark{position:absolute;top:35%;bottom:0;width:2px;background:rgba(255,255,255,.14);left:33.33%}.laneMark.two{left:66.66%}
+    .raceItem{position:absolute;top:38%;width:clamp(72px,11.5vw,122px);height:clamp(66px,10.5vw,112px);display:flex;align-items:center;justify-content:center;font-size:clamp(24px,5vw,42px);transform:translateX(-50%);filter:drop-shadow(0 7px 6px #001b) drop-shadow(0 0 8px #72e8ff66);transform-origin:center bottom;will-change:top,transform;z-index:3}.raceItem.obstacle3d{background-repeat:no-repeat;filter:drop-shadow(0 9px 7px #001b) drop-shadow(0 0 9px #62dfff77)}.raceItem.base3d{background-image:url('${obstacleSprite}');background-size:300% 200%}.raceItem.extra3d{background-image:url('${obstacleExtraSprite}');background-size:300% 300%}.raceItem.coin{width:clamp(32px,5vw,48px);height:clamp(32px,5vw,48px);border:3px solid #fff0a1;border-radius:50%;background:radial-gradient(circle at 30% 25%,#fff8bd 0%,#ffd943 24%,#e6a51a 61%,#92530a 100%);box-shadow:0 0 17px #ffd44e,inset 0 2px 4px #fff8,inset 0 -5px 7px #80500a;color:#8a4b06;perspective:300px}.raceItem.coin span{width:72%;height:72%;display:block;border:2px solid #a7680d;border-radius:50%;text-align:center;line-height:1.45;font-weight:1000;font-size:clamp(15px,3vw,23px);text-shadow:0 1px #fff5}.coinBurst{position:absolute;z-index:8;pointer-events:none}.coinShard{position:absolute;left:0;top:0;width:13px;height:13px;border:2px solid #fff3;border-radius:50%;background:radial-gradient(circle at 30% 25%,#fff8bf,#ffd63c 42%,#ad650b 100%);box-shadow:0 0 10px #ffdd58;animation:coinScatter .58s cubic-bezier(.15,.7,.25,1) forwards}@keyframes coinScatter{to{opacity:0;transform:translate(var(--dx),var(--dy)) rotateY(600deg) scale(.18)}}.raceScene.impactShake{animation:impactShake .3s ease-in-out}.raceScene.impactShake::after{content:"";position:absolute;inset:0;z-index:6;pointer-events:none;background:radial-gradient(ellipse at center,transparent 40%,#ff425044 100%);animation:impactFlash .3s ease-out}@keyframes impactShake{0%,100%{transform:translate(0,0)}20%{transform:translate(-7px,2px)}40%{transform:translate(6px,-2px)}60%{transform:translate(-4px,1px)}80%{transform:translate(3px,0)}}@keyframes impactFlash{0%{opacity:.9}100%{opacity:0}}
+    .racePlayer{position:absolute;bottom:7%;left:50%;width:clamp(112px,16vw,184px);height:clamp(82px,12vw,138px);display:flex;align-items:center;justify-content:center;transform:translateX(-50%);filter:drop-shadow(0 0 16px ${customColors.fire});transition:left .16s cubic-bezier(.2,.8,.2,1),bottom .4s cubic-bezier(.18,.78,.28,1),transform .4s cubic-bezier(.18,.78,.28,1);will-change:left,bottom,transform;z-index:4}.raceKrathong{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 10px 8px #001b) drop-shadow(0 0 14px ${customColors.fire}) drop-shadow(0 0 7px ${customColors.candle})}
+    .racePlayer.jump{animation:krathongHop .86s cubic-bezier(.22,.72,.3,1) both}@keyframes krathongHop{0%{bottom:7%;transform:translateX(-50%) scale(1)}22%{bottom:18%;transform:translateX(-50%) scale(1.08)}48%{bottom:25%;transform:translateX(-50%) scale(1.15)}70%{bottom:20%;transform:translateX(-50%) scale(1.1)}100%{bottom:7%;transform:translateX(-50%) scale(1)}}
+    .wake{position:absolute;bottom:5%;left:50%;width:32%;height:28px;transform:translateX(-50%);border-radius:50%;border-top:3px solid rgba(174,250,255,.8);box-shadow:0 -7px 15px rgba(100,230,255,.25)}
+    .raceControls{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:10px}
+    .raceControls button{border:1px solid #8ddff3;background:linear-gradient(#225c87,#102849);color:white;border-radius:14px;min-width:64px;min-height:54px;font-size:25px;font-weight:900;touch-action:none;box-shadow:0 4px 0 #06152c}
+    .raceControls .jumpBtn{min-width:110px;background:linear-gradient(#b83c9d,#672b80);font-size:16px}
+    .raceHint{font-size:11px;color:#b9d8f4;margin:8px 0 0}
+    @media(max-width:560px){.raceScene{min-height:280px;height:48vh}.raceStat{font-size:12px}.raceControls button{min-width:58px;min-height:52px}.raceControls .jumpBtn{min-width:96px}}
+   </style>
+   <div class="raceTop">
+    <div class="raceStat">💰 <span id="rMoney">${raceState.money.toLocaleString('th-TH')}</span><small>เงินในกระทง (บาท)</small></div>
+    <div class="raceStat">🪙 <span id="rCoins">0</span><small>เหรียญ</small></div>
+    <div class="raceStat">⏱️ <span id="rTime">60</span><small>เวลา</small></div>
+    <div class="raceStat">⭐ <span id="rScore">0</span><small>คะแนน</small></div>
+   </div>
+   <div class="raceScene" id="raceScene" aria-label="สนามแข่งกระทง ด่าน ${currentStage}" style="background-image:url('${stage.image}');background-size:100% 100%;background-position:center;background-repeat:no-repeat">
+    <div class="stageBadge">${currentStage}. ${stage.name}</div><div class="raceCountdown" id="raceCountdown" aria-live="assertive">3</div><div class="raceHorizon"></div><div class="water"></div>
+    <i class="speedLine s1"></i><i class="speedLine s2"></i><i class="speedLine s3"></i><i class="speedLine s4"></i>
+    
+    <div class="wake" id="raceWake"></div><div class="racePlayer" id="racePlayer"><canvas class="raceKrathong" id="raceKrathong" width="512" height="341" data-krathong="${flowerSpriteIndex(customColors.flower)}"></canvas></div>
+   </div>
+   <div class="raceControls">
+    <button id="raceLeft" aria-label="เลี้ยวซ้าย">◀</button>
+    <button class="jumpBtn" id="raceJump">⤊ กระโดด</button>
+    <button id="raceRight" aria-label="เลี้ยวขวา">▶</button>
+   </div>
+   <p class="raceHint">หลบสิ่งกีดขวางเฉพาะด่านที่ลอยมาตามเลน • กดค้างหรือ ลากเพื่อบังคับ • Space / ▲ กระโดด • ชนเสีย 100 บาท • เก็บเหรียญ 3D ได้ 100 บาท</p>
+   <div class="modalActions"><button class="smallBtn" id="raceExit">ออกจากสนาม</button></div>
+  </div>`);
+  $('modalWrap').classList.add('raceFullscreen');const wrap=$('modalWrap');if(wrap.requestFullscreen)wrap.requestFullscreen().catch(()=>{});renderKrathongCanvases($('modal'));
+  const $r=id=>document.getElementById(id);
+  const player=$r('racePlayer'),scene=$r('raceScene');
+  const lanes=[0,1,2];function lanePercent(lane,depth){return 50+(lane-1)*(7+26*depth)}
+  function paintPlayer(){player.style.left=(50+raceState.steerX*44)+'%';player.classList.toggle('jump',raceState.jump>0)}
+  function jump(){if(!raceState.running||raceState.jump>0)return;raceState.jump=9;player.classList.remove('jump');void player.offsetWidth;paintPlayer()}
+  function hitFeedback(){try{if(navigator.vibrate)navigator.vibrate([90,45,130])}catch(e){}scene.classList.remove('impactShake');void scene.offsetWidth;scene.classList.add('impactShake');setTimeout(()=>scene.classList.remove('impactShake'),320)}
+  function coinCollectEffect(el){const a=el.getBoundingClientRect(),b=scene.getBoundingClientRect(),burst=document.createElement('div');burst.className='coinBurst';burst.style.left=(a.left+a.width/2-b.left)+'px';burst.style.top=(a.top+a.height/2-b.top)+'px';for(let i=0;i<10;i++){const p=document.createElement('i'),angle=(Math.PI*2*i/10)+(Math.random()-.5)*.35,r=26+Math.random()*35;p.className='coinShard';p.style.setProperty('--dx',Math.cos(angle)*r+'px');p.style.setProperty('--dy',Math.sin(angle)*r+'px');p.style.animationDelay=(Math.random()*.05)+'s';burst.appendChild(p)}scene.appendChild(burst);setTimeout(()=>burst.remove(),700)}
+  function prepareCoinAudio(){try{const A=window.AudioContext||window.webkitAudioContext;if(!A)return;if(!coinAudio)coinAudio=new A();if(coinAudio.state==='suspended'){const r=coinAudio.resume();if(r&&r.catch)r.catch(()=>{})}}catch(e){}}
+  function playCoinSound(){try{prepareCoinAudio();if(!coinAudio)return;const t=coinAudio.currentTime;[[1318.5,0,.13,.065],[1760,.025,.17,.05],[2637,.055,.1,.03]].forEach(([hz,delay,duration,volume])=>{const o=coinAudio.createOscillator(),g=coinAudio.createGain(),at=t+delay;o.type='triangle';o.frequency.setValueAtTime(hz,at);g.gain.setValueAtTime(.0001,at);g.gain.exponentialRampToValueAtTime(volume,at+.008);g.gain.exponentialRampToValueAtTime(.0001,at+duration);o.connect(g);g.connect(coinAudio.destination);o.start(at);o.stop(at+duration+.015)})}catch(e){}}
+  function playCrashSound(){try{prepareCoinAudio();if(!coinAudio)return;const t=coinAudio.currentTime,o=coinAudio.createOscillator(),g=coinAudio.createGain();o.type='sawtooth';o.frequency.setValueAtTime(170,t);o.frequency.exponentialRampToValueAtTime(48,t+.2);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.22,t+.012);g.gain.exponentialRampToValueAtTime(.0001,t+.24);o.connect(g);g.connect(coinAudio.destination);o.start(t);o.stop(t+.25);const b=coinAudio.createBuffer(1,Math.floor(coinAudio.sampleRate*.16),coinAudio.sampleRate),d=b.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*(1-i/d.length);const n=coinAudio.createBufferSource(),f=coinAudio.createBiquadFilter(),ng=coinAudio.createGain();n.buffer=b;f.type='lowpass';f.frequency.value=950;ng.gain.setValueAtTime(.0001,t);ng.gain.exponentialRampToValueAtTime(.14,t+.006);ng.gain.exponentialRampToValueAtTime(.0001,t+.16);n.connect(f);f.connect(ng);ng.connect(coinAudio.destination);n.start(t)}catch(e){}}
+  function startRaceMusic(){try{prepareCoinAudio();if(!coinAudio)return;const melody=[659,784,988,1175,988,784,659,784,523,659,784,988,784,659,587,784],bass=[131,131,165,165,110,110,147,147];musicStep=0;const playNote=(frequency,when,type,volume,duration)=>{const o=coinAudio.createOscillator(),g=coinAudio.createGain();o.type=type;o.frequency.setValueAtTime(frequency,when);g.gain.setValueAtTime(.0001,when);g.gain.exponentialRampToValueAtTime(volume,when+.012);g.gain.exponentialRampToValueAtTime(.0001,when+duration);o.connect(g);g.connect(coinAudio.destination);o.start(when);o.stop(when+duration+.02)};musicTimer=setInterval(()=>{if(!coinAudio||coinAudio.state!=='running'||!raceState||!raceState.running)return;const now=coinAudio.currentTime+.02,step=musicStep%16;playNote(melody[step],now,'triangle',.045,.17);if(step%2===0)playNote(bass[(step/2)%8],now,'square',.028,.19);if(step===0||step===8)playNote(65,now,'sine',.07,.13);musicStep++},190)}catch(e){}}
+  function playStageSting(){try{prepareCoinAudio();if(!coinAudio)return;const t=coinAudio.currentTime;[784,988,1318,1760].forEach((hz,i)=>{const o=coinAudio.createOscillator(),g=coinAudio.createGain(),at=t+i*.09;o.type='triangle';o.frequency.value=hz;g.gain.setValueAtTime(.0001,at);g.gain.exponentialRampToValueAtTime(.07,at+.01);g.gain.exponentialRampToValueAtTime(.0001,at+.2);o.connect(g);g.connect(coinAudio.destination);o.start(at);o.stop(at+.22)})}catch(e){}}
+  const stageCharacters=[{line:'เป็ดนักซิ่งโผล่มาแล้ว!',sprite:0},{line:'พญานาคเฝ้าสายน้ำปรากฏ!',sprite:1},{line:'นักซิ่งคลองแสนแสบมาแล้ว!',sprite:2},{line:'ผีเจ้าสุสานโผล่มาทัก!',sprite:3},{line:'นักบิดสายฟ้าพุ่งเข้ามา!',sprite:4}];
+  function showStageCharacter(){if(!raceState||!raceState.running)return;const character=stageCharacters[currentStage-1],pop=document.createElement('div');pop.className='stageCharacterPop';pop.innerHTML='<div class="stageCharacterFrame"></div><span class="stageCharacterLine">'+character.line+'</span>';const frame=pop.querySelector('.stageCharacterFrame'),figure=document.createElement('img');figure.className='stageCharacterSprite';figure.src=stageCharacterAtlas;figure.alt='';figure.style.left=(-character.sprite*100)+'%';frame.appendChild(figure);scene.appendChild(pop);playStageSting();setTimeout(()=>pop.remove(),3600)}
+  function setSteer(value){if(raceState&&raceState.running)raceState.steerInput=value}
+  [['raceLeft',-1],['raceRight',1]].forEach(([id,dir])=>{const btn=$r(id);btn.addEventListener('pointerdown',e=>{e.preventDefault();btn.setPointerCapture(e.pointerId);setSteer(dir)});['pointerup','pointercancel','lostpointercapture'].forEach(ev=>btn.addEventListener(ev,()=>setSteer(0)))});
+  $r('raceJump').addEventListener('pointerdown',e=>{e.preventDefault();jump()});
+  $r('raceExit').onclick=()=>{stopRace();stopRaceMusic();leaveGameFullscreen();closeModal();document.onkeydown=null;document.onkeyup=null;startHomeMusic()};
+  const steerFromPointer=e=>{const rect=scene.getBoundingClientRect();raceState.steerX=Math.max(-.92,Math.min(.92,((e.clientX-rect.left)/rect.width-.5)*2));raceState.steerInput=0;paintPlayer()};
+  scene.addEventListener('pointerdown',e=>{if(!raceState.running)return;raceState.dragSteer=true;scene.setPointerCapture(e.pointerId);steerFromPointer(e)});
+  scene.addEventListener('pointermove',e=>{if(raceState.dragSteer)steerFromPointer(e)});
+  ['pointerup','pointercancel','lostpointercapture'].forEach(ev=>scene.addEventListener(ev,()=>{raceState.dragSteer=false}));
+  paintPlayer();
+  document.onkeydown=e=>{if(!raceState||!raceState.running)return;if(['ArrowLeft','a','A'].includes(e.key)){e.preventDefault();setSteer(-1)}if(['ArrowRight','d','D'].includes(e.key)){e.preventDefault();setSteer(1)}if(e.code==='Space'||e.key==='ArrowUp'){e.preventDefault();jump()}};
+  document.onkeyup=e=>{if(['ArrowLeft','a','A','ArrowRight','d','D'].includes(e.key))setSteer(0)};
+  let tick=0;
+  raceSpawn=setInterval(()=>{
+   if(!raceState.running)return;
+   const stageTypes=stageObstacleSets[currentStage-1],kind=(Math.random()<.38?'🪙':stageTypes[Math.floor(Math.random()*stageTypes.length)]);
+   const lane=Math.floor(Math.random()*3);
+   const el=document.createElement('div');el.className='raceItem '+(kind==='🪙'?'coin':(obstacleBasePositions[kind]?'obstacle3d base3d':'obstacle3d extra3d'));if(kind==='🪙'){el.innerHTML='<span>฿</span>'}else{el.style.backgroundPosition=obstacleBasePositions[kind]||obstacleExtraPositions[kind];el.setAttribute('aria-label','สิ่งกีดขวางลอยน้ำ')}el.style.left=lanePercent(lane,0)+'%';el.style.top='38%';scene.appendChild(el);
+   raceState.items.push({el,lane,y:38,kind});
+  },1050);
+  raceLoop=setInterval(()=>{
+   if(!raceState.running)return;
+   tick++;
+   if(raceState.jump>0)raceState.jump--;raceState.steerX=Math.max(-.92,Math.min(.92,raceState.steerX+raceState.steerInput*.22));paintPlayer();
+   raceState.items.forEach(it=>{
+    it.y+=1.8;it.el.style.top=it.y+'%';const depth=Math.max(0,Math.min(1,(it.y-38)/40)),scale=it.kind==='🪙'?.55+it.y/100:.38+Math.pow(depth,1.45)*1.2;it.el.style.left=lanePercent(it.lane,depth)+'%';it.el.style.transform=`translateX(-50%) translateY(${Math.sin(tick*.23+it.lane)*3*depth}px) rotate(${Math.sin(tick*.12+it.lane)*2.4*depth}deg) scale(${scale})`;if(it.kind==='🪙'&&it.el.firstElementChild)it.el.firstElementChild.style.transform=`rotateY(${Math.sin(tick*.23)*45}deg)`;
+    if(it.y>78&&!it.done){
+     it.done=true;
+     if(Math.abs((50+raceState.steerX*44)-lanePercent(it.lane,depth))<13){
+      if(it.kind==='🪙'){raceState.coins++;raceState.money+=100;raceState.score+=100;coinCollectEffect(it.el);playCoinSound();it.el.remove()}
+      else if(raceState.jump>0){raceState.score+=20}
+      else{raceState.money=Math.max(0,raceState.money-100);raceState.score=Math.max(0,raceState.score-50);playCrashSound();it.el.textContent='💥';it.el.classList.remove('obstacle3d');it.el.style.backgroundPosition='';it.el.style.backgroundImage='none';hitFeedback();if(raceState.money===0)finishRace(false)}
+     }else if(it.kind==='🪙'){/* missed coin */}
+    }
+   });
+   raceState.items=raceState.items.filter(it=>{if(it.y>100){it.el.remove();return false}return true});
+   if(tick%25===0){raceState.time--; $r('rTime').textContent=raceState.time}
+   $r('rMoney').textContent=raceState.money.toLocaleString('th-TH');$r('rCoins').textContent=raceState.coins;$r('rScore').textContent=raceState.score.toLocaleString('th-TH');
+   if(raceState.running&&raceState.time<=0)finishRace(true);
+  },100);
+  const countdown=$r('raceCountdown'),beats=[['3',''],['2',''],['1',''],['READY','ready'],['GO!','go']];let beat=0;function countNext(){if(!raceState||!raceState.running&&beat>5)return;if(beat>=beats.length){countdown.remove();raceState.running=true;stagePopTimer=setInterval(showStageCharacter,15000);return}countdown.textContent=beats[beat][0];countdown.className='raceCountdown '+beats[beat][1];beat++;setTimeout(countNext,beats[beat-1][0]==='READY'?720:beats[beat-1][0]==='GO!'?640:760)}countNext();
+ }
+ function finishRace(passed){
+  if(!raceState||!raceState.running)return;
+  raceState.running=false;stopRace();stopRaceMusic();document.onkeydown=null;document.onkeyup=null;carriedMoney=raceState.money;
+  const finalScore=raceState.score+raceState.coins*50;
+  const grade=finalScore>=1800?'S':finalScore>=900?'A':'B';
+  try{
+   ranks.push({name:playerName,score:finalScore,skin:selectedSkin});
+   ranks.sort((a,b)=>b.score-a.score);ranks=ranks.slice(0,10);
+   saveRanks();renderRanks();
+  }catch(e){}
+  const last=passed&&currentStage===5&&!singleStageMode,stage=stageScenes[currentStage-1];const title=last?'🏆 พิชิตครบทั้ง 5 ด่าน!':passed?'🏆 ผ่านด่านสำเร็จ!':'💸 เงินหมด พลาดด่าน!';
+  const gradeColor=grade==='S'?'#ffe36e':grade==='A'?'#83e8ff':'#d5b6ff';
+  showModal(`<div class="stageResult">
+   <style>
+    .stageResult{color:#fff;text-align:center;padding:8px 2px}
+    .resultBanner{font-size:clamp(24px,5vw,36px);font-weight:1000;color:#ffe58d;text-shadow:0 0 16px #ff8b36;margin:6px 0 14px}
+    .gradeMark{font-size:clamp(72px,18vw,112px);line-height:1;font-weight:1000;color:${gradeColor};text-shadow:0 0 12px ${gradeColor},0 0 34px #7e56ff;margin:10px 0}
+    .resultStats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:16px 0}
+    .resultStat{background:#091d3b;border:1px solid #4775a2;border-radius:13px;padding:12px 5px}
+    .resultStat strong{display:block;font-size:clamp(19px,4vw,27px);color:#fff}
+    .resultStat small{font-size:11px;color:#a9c9e9}
+    .resultNote{font-size:13px;color:#c6def7;margin:8px 0 14px}
+    .resultButtons{display:flex;justify-content:center;gap:9px;flex-wrap:wrap}
+   </style>
+   <div class="resultBanner">${title}</div>
+   <div style="font-size:54px">${stage.icon}</div>
+   <div>ด่าน ${currentStage}/5 ${stage.name} ${passed?'เคลียร์เรียบร้อย':'ยังไม่สำเร็จ'}</div>
+   <div class="gradeMark">${grade}</div>
+   <div style="font-weight:900;color:${gradeColor}">ระดับผลงาน ${grade}</div>
+   <div class="resultStats">
+    <div class="resultStat"><strong>${finalScore.toLocaleString('th-TH')}</strong><small>⭐ คะแนนรวม</small></div>
+    <div class="resultStat"><strong>${raceState.coins}</strong><small>🪙 เหรียญที่เก็บได้</small></div>
+    <div class="resultStat"><strong>${raceState.money.toLocaleString('th-TH')} ฿</strong><small>💰 เงินคงเหลือ</small></div>
+   </div>
+   <p class="resultNote">${singleStageMode?(passed?'ผ่านด่านแล้ว เลือกด่านอื่นหรือเล่นซ้ำได้':'เงินหมดแล้ว เริ่มใหม่เพื่อรับเงิน 1,000 บาท'):last?'สุดยอด! พิชิตครบทุกสนามแล้ว':passed?'เงินคงเหลือนี้จะติดตัวไปยังด่านถัดไป':'เงินหมดแล้ว เริ่มใหม่เพื่อรับเงิน 1,000 บาท'}</p>
+   <div class="resultButtons">
+    <button class="smallBtn" id="raceHome">กลับหน้าหลัก</button>
+    <button class="smallBtn" id="raceAgain">${passed?'เล่นด่านนี้อีกครั้ง':'เริ่มใหม่ 1,000 บาท'}</button>
+    ${passed&&!last&&!singleStageMode?'<button class="btn primary" id="nextStage">ไปด่านต่อไป ➜</button>':''}${singleStageMode?'<button class="btn primary" id="otherStages">เลือกด่านอื่น</button>':''}${last?'<button class="btn primary" id="restartRun">เล่นใหม่ 1,000 บาท</button>':''}
+   </div>
+  </div>`);
+  $('raceHome').onclick=()=>{leaveGameFullscreen();closeModal();document.onkeydown=null;startHomeMusic()};if(singleStageMode)$('otherStages').onclick=()=>{leaveGameFullscreen();closeModal();stageSelectScreen()};
+  $('raceAgain').onclick=()=>{if(!passed){if(!singleStageMode)currentStage=1;carriedMoney=1000}else carriedMoney=stageStartMoney;closeModal();start()};
+  if(passed&&!last)$('nextStage').onclick=()=>{currentStage++;closeModal();start()};if(last)$('restartRun').onclick=()=>{currentStage=1;carriedMoney=1000;closeModal();start()};
+ }
+ function stageSelectScreen(){const descriptions=['ผักตบชวา • เป็ด • ก้อนหิน','ทุ่น • เรือ • ผักตบชวา','ขยะ • เรือ • วัยรุ่นขโมยเหรียญ','ผี • กะโหลก • มือโผล่จากน้ำ','มอเตอร์ไซค์ • กรวย • หลุมถนน'];showModal(`<button class="close" id="closeModal">×</button><h2 id="modalTitle">เลือกด่านที่ต้องการเล่น</h2><p>เลือกสนามใดก็ได้ เริ่มต้นด้วยเงิน 1,000 บาท</p><style>.stagePickGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:16px 0}.stagePick{padding:0;border:1px solid #4f85b5;border-radius:15px;background:linear-gradient(145deg,#102b4c,#08172e);color:#fff;text-align:left;cursor:pointer;overflow:hidden;min-width:0;transition:transform .18s,border-color .18s,box-shadow .18s}.stagePick:hover{border-color:#ffd36b;transform:translateY(-2px);box-shadow:0 0 18px #45d8ff44}.stagePreview{display:block;width:100%;height:clamp(86px,12vw,132px);background-size:cover;background-position:center;position:relative;border-bottom:1px solid #69cfff55}.stagePreview:after{content:"";position:absolute;inset:35% 0 0;background:linear-gradient(transparent,#06152be8)}.stagePickInfo{display:block;padding:9px 11px 11px}.stagePick strong{display:block;color:#ffe29a;font-size:15px;margin-bottom:4px}.stageStars{display:block;color:#ffd84d;letter-spacing:2px;font-size:14px;text-shadow:0 0 9px #ffba31;margin-bottom:4px}.stagePickInfo>span{display:block;font-size:11px;color:#c8ddf5;line-height:1.4}.stagePick:last-child:nth-child(odd){grid-column:1/-1}.stagePick:last-child:nth-child(odd) .stagePreview{height:clamp(90px,11vw,120px)}@media(max-width:520px){.stagePickGrid{grid-template-columns:1fr;gap:9px}.stagePreview{height:100px}.stagePick:last-child:nth-child(odd){grid-column:auto}.stagePick:last-child:nth-child(odd) .stagePreview{height:100px}}</style><div class="stagePickGrid">`+stageScenes.map((x,i)=>`<button class="stagePick" data-stage="${i+1}"><span class="stagePreview" style="background-image:linear-gradient(180deg,rgba(3,12,31,.04),rgba(3,12,31,.24)),url('${x.image}')"></span><span class="stagePickInfo"><strong><span class="stageStars" aria-label="ความยาก ${i+1} จาก 5">${'★'.repeat(i+1)}${'☆'.repeat(5-i-1)}</span> ${x.icon} ด่าน ${i+1} · ${x.name}</strong><span>${descriptions[i]}</span></span></button>`).join('')+`</div><div class="modalActions"><button class="smallBtn" id="closeStagePick">กลับหน้าหลัก</button></div>`);$('closeModal').onclick=closeModal;$('closeStagePick').onclick=closeModal;$('modal').querySelectorAll('[data-stage]').forEach(b=>b.onclick=()=>{singleStageMode=true;currentStage=Number(b.dataset.stage);carriedMoney=1000;start()})}
+ $('stageSelectBtn').addEventListener('click',stageSelectScreen);
+ $('clearRanksHome').addEventListener('click',clearRanks);
+ $('startBtn').addEventListener('click',()=>{singleStageMode=false;currentStage=1;carriedMoney=1000;start()});
+ $('selectBtn').addEventListener('click',customizeScreen);
+ $('howBtn').addEventListener('click',howScreen);
+ $('rankBtn').addEventListener('click',rankScreen);
+ $('modalWrap').addEventListener('click',e=>{if(e.target===$('modalWrap'))closeModal()});
+ document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(raceState)raceState.running=false;stopRace();stopRaceMusic();document.onkeydown=null;document.onkeyup=null;leaveGameFullscreen();closeModal();startHomeMusic()}});
+ renderRanks();
+})();
+</script>
+</body>
+</html>
